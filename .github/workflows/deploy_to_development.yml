@@ -1,0 +1,27 @@
+name: Deploy to Development
+
+concurrency:
+  group: development-concurrency
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    uses: equinor/armada/.github/workflows/deploy_to_development.yml@main
+    with:
+      registry: roboticsdevacr.azurecr.io
+      image_name: robotics/sara-service
+      infrastructure_repository: equinor/analytics-infrastructure
+      # environment_name: Development   # Uncomment to gate deploys behind a GitHub Environment.
+      # runs_on: ubuntu                 # Uncomment for heavy images that exceed ubuntu-latest disk (~14 GB).
+    secrets:
+      registry_username: ${{ secrets.ROBOTICS_ROBOTICSDEVACR_USERNAME }}
+      registry_password: ${{ secrets.ROBOTICS_ROBOTICSDEVACR_PASSWORD }}
+      deploy_key: ${{ secrets.ANALYTICS_INFRASTRUCTURE_DEPLOY_KEY }}

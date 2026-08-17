@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=64.0", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sara-service"
+authors = [{ name = "Equinor ASA", email = "fg_robots_dev@equinor.com" }]
+description = "Short description of what the service does."
+readme = "README.md"
+requires-python = ">=3.14"
+license-files = ["LICENSE"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "azure-identity",
+  "azure-storage-blob",
+  "opentelemetry-api",
+  "opentelemetry-exporter-otlp",
+  "opentelemetry-sdk",
+  "pydantic",
+  "pydantic-settings",
+  "python-dotenv",
+]
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/equinor/sara-service.git"
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "isort",
+  "mypy",
+  "pytest",
+  "ruff",
+  "types-requests",
+]
+
+[tool.setuptools_scm]
+# Enables setuptools_scm to derive the version from git tags.
+
+[tool.setuptools.packages.find]
+include = ["sara_service*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py314"]
+
+[tool.isort]
+profile = "black"
+known_first_party = ["sara_service"]
+
+[tool.mypy]
+ignore_missing_imports = true
+no_warn_return_any = true
+warn_unused_ignores = false
+strict_optional = true
+disallow_untyped_calls = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+files = ["sara_service", "main.py"]

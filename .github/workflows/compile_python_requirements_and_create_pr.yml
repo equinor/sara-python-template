@@ -1,0 +1,18 @@
+name: Compile python requirements and create PR
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "5 6 * * 1-5" # 06:05 UTC Mon-Fri
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  compile-requirements-and-create-pr:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: equinor/armada/.github/workflows/compile_python_requirements_and_create_pr.yml@main

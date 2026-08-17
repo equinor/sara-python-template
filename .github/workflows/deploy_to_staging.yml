@@ -1,0 +1,28 @@
+name: Deploy to Staging
+
+concurrency:
+  group: staging-concurrency
+  cancel-in-progress: true
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    uses: equinor/armada/.github/workflows/deploy_to_staging.yml@main
+    with:
+      registry: roboticsstagingacr.azurecr.io
+      image_name: robotics/sara-service
+      tag: ${{ github.event.release.tag_name }}
+      infrastructure_repository: equinor/analytics-infrastructure
+      author_name: ${{ github.event.release.author.login }}
+      # runs_on: ubuntu   # Uncomment for heavy images that exceed ubuntu-latest disk (~14 GB).
+    secrets:
+      registry_username: ${{ secrets.ROBOTICS_ROBOTICSSTAGINGACR_USERNAME }}
+      registry_password: ${{ secrets.ROBOTICS_ROBOTICSSTAGINGACR_PASSWORD }}
+      deploy_key: ${{ secrets.ANALYTICS_INFRASTRUCTURE_DEPLOY_KEY }}

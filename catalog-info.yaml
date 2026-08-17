@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sara-service
+  annotations:
+    github.com/project-slug: equinor/sara-service
+spec:
+  type: other
+  lifecycle: unknown
+  owner: eq-robot-developer
+  dependsOn:
+    - component:sara
