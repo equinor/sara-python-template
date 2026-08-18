@@ -4,7 +4,10 @@ Template repository for creating new SARA Python services.
 
 ## Usage
 
-Click **Use this template** on GitHub (or use `gh repo create <name> --template equinor/sara-python-template`) to bootstrap a new repo, then run the checklist below.
+Click **Use this template** on GitHub (or use `gh repo create <name> --template equinor/sara-python-template`) to bootstrap a new repo, then:
+
+1. Work through the **Bootstrap checklist** below to rename the package and register the service.
+2. Work through [`equinor/armada/docs/new_repo_checklist.md`](https://github.com/equinor/armada/blob/main/docs/new_repo_checklist.md) to configure repository settings, branch rulesets, environments, and secrets — GitHub templates only copy files, not repo configuration.
 
 ## Bootstrap checklist
 
@@ -48,6 +51,8 @@ The workflows expect these secrets to be present in the repository (org-level is
 - `ROBOTICS_ROBOTICSSTAGINGACR_USERNAME` / `_PASSWORD`
 - `ROBOTICS_ROBOTICSPRODACR_USERNAME` / `_PASSWORD`
 - `ANALYTICS_INFRASTRUCTURE_DEPLOY_KEY`
+
+See [`equinor/armada/docs/new_repo_checklist.md`](https://github.com/equinor/armada/blob/main/docs/new_repo_checklist.md) for the full list of repository settings, branch rulesets, environments, and secrets used across sara-* repos.
 
 ### 5. Register the service in infrastructure
 
