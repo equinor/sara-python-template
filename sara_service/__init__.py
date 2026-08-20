@@ -1,8 +1,8 @@
 """sara-service package."""
 
-try:
-    from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
+try:
     __version__ = version("sara-service")
-except Exception:  # pragma: no cover
+except PackageNotFoundError:  # pragma: no cover
     __version__ = "0.0.0+unknown"

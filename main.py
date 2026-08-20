@@ -7,10 +7,14 @@ import logging
 
 from sara_service import __version__
 
+logger = logging.getLogger(__name__)
+
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    logging.info("sara-service version=%s started", __version__)
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+    )
+    logger.info("sara-service version=%s started", __version__)
 
 
 if __name__ == "__main__":
