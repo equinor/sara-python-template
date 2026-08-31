@@ -1,5 +1,19 @@
 name: Deploy to Staging
 
+# New repository checklist — this workflow will not authenticate until all
+# three are done:
+#
+#   1. Create the GitHub Environment named below (Development / Staging /
+#      Production). The federated credential matches on its name, including
+#      casing.
+#   2. Add this repository to `automation/aks/gha-push-<env>.bicepparam` in
+#      equinor/robotics-infrastructure and deploy `gha-push-identity.bicep`.
+#   3. Set the `ACR_PUSH_CLIENT_ID` environment variable to that identity's
+#      client ID. `AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID` are inherited
+#      from the organisation.
+#
+# There is no registry password to request; authentication is via OIDC.
+
 concurrency:
   group: staging-concurrency
   cancel-in-progress: true
@@ -14,6 +28,10 @@ permissions:
 
 jobs:
   deploy:
+    # The template itself has no environment, no federated credential and only
+    # a placeholder image name, so it cannot publish. Generated repositories do
+    # not match this condition and run normally.
+    if: github.repository != 'equinor/sara-python-template'
     permissions:
       contents: read
       packages: write
@@ -28,7 +46,8 @@ jobs:
       kustomization_base_path: k8s_kustomize/analytics/overlays
       author_name: ${{ github.event.release.author.login }}
       # runs_on: ubuntu   # Uncomment for heavy images that exceed ubuntu-latest disk (~14 GB).
+      environment: Staging
+      use_oidc: true
+      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
     secrets:
-      registry_username: ${{ secrets.ROBOTICS_ROBOTICSSTAGINGACR_USERNAME }}
-      registry_password: ${{ secrets.ROBOTICS_ROBOTICSSTAGINGACR_PASSWORD }}
       deploy_key: ${{ secrets.ANALYTICS_INFRASTRUCTURE_DEPLOY_KEY }}
