@@ -39,18 +39,26 @@ Then edit:
 
 The default `runs_on` is `ubuntu-latest` (GitHub-hosted, ~14 GB disk). If your image includes torch/ML weights and exceeds that, set `runs_on: ubuntu` in `deploy_to_development.yml` and `deploy_to_staging.yml` to use Equinor's self-hosted runner. See `sara-anonymizer` for reference.
 
-### 3. Optional: environment gate
+### 3. Create the GitHub Environments
 
-If you want dev deploys to require approval via a GitHub Environment, uncomment the `environment_name: Development` line in `deploy_to_development.yml` and create the `Development` environment under **Settings → Environments** with required reviewers.
+Create `Development`, `Staging` and `Production` under **Settings → Environments**. These are **required**, not optional: the federated credential that authenticates to the registry matches on the environment name, so a missing or differently-cased environment means the deploy cannot authenticate at all.
 
-### 4. Configure GitHub secrets
+Add required reviewers on any of them you want to gate.
 
-The workflows expect these secrets to be present in the repository (org-level is fine):
+### 4. Set up registry access
 
-- `ROBOTICS_ROBOTICSDEVACR_USERNAME` / `_PASSWORD`
-- `ROBOTICS_ROBOTICSSTAGINGACR_USERNAME` / `_PASSWORD`
-- `ROBOTICS_ROBOTICSPRODACR_USERNAME` / `_PASSWORD`
+Publishing uses a federated credential, not a registry password. There is nothing secret to request.
+
+1. Add this repository to `automation/aks/gha-push-<env>.bicepparam` in [`equinor/robotics-infrastructure`](https://github.com/equinor/robotics-infrastructure) for each environment you publish to, and deploy `gha-push-identity.bicep` for that environment.
+2. Set `ACR_PUSH_CLIENT_ID` as an **environment variable** on each GitHub Environment, to the client ID of `robotics-gha-push-<env>`.
+
+`AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID` are inherited from the organisation.
+
+The only secret the workflows need is:
+
 - `ANALYTICS_INFRASTRUCTURE_DEPLOY_KEY`
+
+If a deploy fails at `azure/login`, the usual causes are a missing `id-token: write` on some job in the call chain (a called workflow's token can never exceed its caller's), or an Actions allowlist that does not permit `azure/login@*` — the latter shows as `startup_failure` at 0s with no jobs, which looks like a syntax error but is not.
 
 See [`equinor/armada/docs/new_repo_checklist.md`](https://github.com/equinor/armada/blob/main/docs/new_repo_checklist.md) for the full list of repository settings, branch rulesets, environments, and secrets used across sara-* repos.
 
