@@ -64,7 +64,7 @@ See [`equinor/armada/docs/new_repo_checklist.md`](https://github.com/equinor/arm
 
 ### 5. Register the service in infrastructure
 
-Add a new overlay entry in `equinor/analytics-infrastructure` under `k8s_kustomize/overlays/{development,staging,production}/kustomization.yaml` pointing at `robotics/sara-your-service`.
+Add a new overlay entry in `equinor/robotics-infrastructure` under `k8s_kustomize/robotics/overlays/{development,staging,production}/kustomization.yaml` pointing at `robotics/sara-your-service`.
 
 ### 6. Generate `uv.lock`
 
