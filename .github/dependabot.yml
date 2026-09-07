@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Python dependencies (pyproject.toml + uv.lock).
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Bundle patch + minor bumps; rely on the native 3-day cooldown.
+      python-patch-minor:
+        patterns: ["*"]
+        update-types: ["patch", "minor"]
+      # Bundle major bumps separately for explicit review.
+      python-major:
+        patterns: ["*"]
+        update-types: ["major"]
+
+  # Docker base images.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      docker-images:
+        patterns: ["*"]
+    ignore:
+      # Handle Python major-version image upgrades manually.
+      - dependency-name: python
+        update-types:
+          - version-update:semver-major

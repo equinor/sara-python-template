@@ -66,14 +66,16 @@ See [`equinor/armada/docs/new_repo_checklist.md`](https://github.com/equinor/arm
 
 Add a new overlay entry in `equinor/robotics-infrastructure` under `k8s_kustomize/robotics/overlays/{development,staging,production}/kustomization.yaml` pointing at `robotics/sara-your-service`.
 
-### 6. Generate `uv.lock`
+### 6. Refresh `uv.lock`
 
-The template intentionally ships without a lockfile. After renaming the package and picking your initial dependencies in `pyproject.toml`, run:
+The template includes a starter lockfile. After renaming the package and picking your initial dependencies in `pyproject.toml`, refresh and commit it:
 
 ```bash
 uv lock
 git add uv.lock
 ```
+
+Keep `uv.lock` committed: Docker builds use it with `uv sync --frozen`, and Dependabot maintains it alongside `pyproject.toml`.
 
 ### 7. Delete this section
 
@@ -96,3 +98,9 @@ uv run pytest
 ## Deployment
 
 Deployment is fully handled by the workflows in `.github/workflows/`, which delegate to the reusable workflows in [`equinor/armada`](https://github.com/equinor/armada). See [`equinor/armada/.github/workflows/deploy_to_development.yml`](https://github.com/equinor/armada/blob/main/.github/workflows/deploy_to_development.yml) for the pipeline.
+
+## Dependency updates
+
+Dependabot is configured in [`.github/dependabot.yml`](.github/dependabot.yml) for weekly Monday updates to Python dependencies (`uv`) and Docker images. Python patch and minor updates are bundled in `python-patch-minor`; major updates are bundled separately in `python-major` for explicit review, not one PR per dependency. Python version-update PRs are limited to five open PRs and use Dependabot's default three-day cooldown without an explicit cooldown setting.
+
+Docker updates are grouped in `docker-images`; Python base-image major upgrades are ignored and must be handled manually. Dependabot replaces the `compile_python_requirements_and_create_pr` workflow caller, so new services inherit only one dependency-update system.
