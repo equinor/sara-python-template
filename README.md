@@ -103,4 +103,6 @@ Deployment is fully handled by the workflows in `.github/workflows/`, which dele
 
 Dependabot is configured in [`.github/dependabot.yml`](.github/dependabot.yml) for weekly Monday updates to Python dependencies (`uv`) and Docker images. Python patch and minor updates are bundled in `python-patch-minor`; major updates are bundled separately in `python-major` for explicit review, not one PR per dependency. Python version-update PRs are limited to five open PRs and use Dependabot's default three-day cooldown without an explicit cooldown setting.
 
-Docker updates are grouped in `docker-images`; Python base-image major upgrades are ignored and must be handled manually. Dependabot replaces the `compile_python_requirements_and_create_pr` workflow caller, so new services inherit only one dependency-update system.
+Every `uv` entry uses `allow: [{dependency-type: all}]` so routine version updates include both direct and transitive dependencies, preserving the transitive coverage of `uv lock --upgrade`. If a service adds independent nested uv projects with their own `pyproject.toml` and `uv.lock`, copy the root `uv` entry for each project and set `directory` to its repository-relative path (for example, `/tools/example`). Retain the allow rule, schedule, groups, PR limit, and cooldown behavior in each entry.
+
+Docker updates are grouped in `docker-images`; Python base-image major upgrades are ignored and must be handled manually. New services inherit Dependabot as their dependency-update system.
