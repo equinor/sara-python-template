@@ -10,14 +10,10 @@ updates:
       day: monday
     open-pull-requests-limit: 5
     groups:
-      # Bundle patch + minor bumps; rely on the native 3-day cooldown.
-      python-patch-minor:
+      # Bundle all uv version updates; rely on the native 3-day cooldown.
+      python-dependencies:
         patterns: ["*"]
-        update-types: ["patch", "minor"]
-      # Bundle major bumps separately for explicit review.
-      python-major:
-        patterns: ["*"]
-        update-types: ["major"]
+        applies-to: version-updates
 
   # Docker base images.
   - package-ecosystem: docker
